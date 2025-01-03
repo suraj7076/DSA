@@ -57,6 +57,66 @@ function constructIterative(root, data) {
     return root;
 }
 
+function deleteNodeRecursive(root, data) {
+    if (root === null) {
+        return null;
+    }
+
+    if (data < root.data) {
+        root.left = deleteNodeRecursive(root.left, data);
+    } else if (data > root.data) {
+        root.right = deleteNodeRecursive(root.right, data);
+    } else {
+        // one child present ( either left or right )
+        if (root.left === null) {
+            return root.right;
+        } else if (root.right === null) {
+            return root.left;
+        }
+        // both child present
+        const minimumValueNode = findMinIterative(root.right);
+        root.data = minimumValueNode.data;
+        root.right = deleteNodeRecursive(root.right, root.data);
+    }
+    return root;
+}
+
+// incomplete
+function deleteNodeIterative(root, data) {
+    if (root === null) {
+        return null;
+    }
+
+    let pointer = null;
+
+    while (root !== null) {
+        if (data < root.data) {
+            pointer = root;
+            root = root.left;
+        } else if (data > root.data) {
+            pointer = root;
+            root = root.right;
+        } else {
+            if (root.left === null && root.right === null) {
+                root = null;
+            }
+            else if (root.left !== null) {
+                const largestNode = findMaxIterative(root.left);
+                if (largestNode !== null) {
+                    if (largestNode.left !== null) {
+
+                    }
+                    largestNode.left = root.left;
+                    largestNode.right = root.right;
+                    root = largestNode;
+                }
+            }
+        }
+    }
+
+    return root;
+}
+
 // Recursive search
 function searchRecursive(root, data) {
     if (root === null) {
@@ -180,6 +240,13 @@ function main() {
     if (maxNode) {
         console.log(`Maximum value: ${maxNode.data}`);
     }
+
+    inorderRecursive(root);
+    const deleteNodeValue = 34;
+    console.log(`delete node: ${deleteNodeValue}`);
+    root = deleteNodeRecursive(root, deleteNodeValue);
+    console.log(`${deleteNodeValue} node deleted `);
+    inorderRecursive(root);
 }
 
 // Run main
